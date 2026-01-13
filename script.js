@@ -1,5 +1,6 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
 import { BUSINESS, DEFAULT_SERVICES, BOOKING, SUPABASE, ADMIN, GALLERY } from "./config.js";
+import { initCookieConsent, FunctionalCookies, CookieConsent } from "./cookies.js";
 
 /*  DOM helpers */
 const $ = (id) => document.getElementById(id);
@@ -304,6 +305,7 @@ function initBookingConfirmDialog() {
     });
   }
 }
+
 async function submitBooking() {
   const dateEl = $("booking-date");
   const selEl = $("booking-service");
@@ -368,6 +370,11 @@ async function submitBooking() {
       ref: booking_ref,
     });
 
+    // after successful booking:
+  if (window.functionalCookies) {
+  window.functionalCookies.saveLastBookingDate(booking_date);
+  window.functionalCookies.savePreferredService(service.id);
+}
     // MVP-simple message under the form
     setStatus("ok", "Booking request sent. We will confirm or cancel by WhatsApp/phone.");
 
@@ -737,6 +744,28 @@ function initBooking() {
   dateEl.value = today;
 
   populateBookingServices();
+
+if (window.functionalCookies) {
+  // Restore last booking date
+  const lastDate = window.functionalCookies.getLastBookingDate();
+  if (lastDate && dateEl) {
+    const lastDateObj = new Date(lastDate);
+    const today = new Date();
+    if (lastDateObj >= today) {
+      dateEl.value = lastDate;
+    }
+  }
+
+  // Restore preferred service
+  const preferredService = window.functionalCookies.getPreferredService();
+  if (preferredService && selEl) {
+    const serviceExists = services.find(s => s.id === preferredService);
+    if (serviceExists) {
+      selEl.value = preferredService;
+    }
+  }
+}
+
   updateServiceHint();
   setText("booking-hours-hint", hoursHintForDate(today));
 
@@ -1032,6 +1061,14 @@ async function loadApprovedReviews() {
     list.appendChild(card);
   });
 }
+
+// Initialize cookie consent system
+const { consent, functional } = initCookieConsent();
+
+// Export for use in other parts of the app
+window.cookieConsent = consent;
+window.functionalCookies = functional;
+
 function openReviewThanksDialog() {
   const dlg = document.getElementById("review-thanks-dialog");
   if (dlg) dlg.showModal();
