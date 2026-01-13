@@ -253,7 +253,7 @@ export function createCookieBanner() {
     <div class="cookie-banner__content">
       <div class="cookie-banner__text">
         <p class="cookie-banner__desc">
-          We use necessary cookies to make our website work. We'd also like to set optional cookies to remember your preferences and provide enhanced functionality.
+          We use necessary cookies to make our website work. Optional cookies help improve your experience.
         </p>
       </div>
       <div class="cookie-banner__actions">
