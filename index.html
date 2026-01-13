@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="page-title">The Business Zm</title>
+    <meta name="description" content="Book a haircut quickly." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <header class="container header">
+      <div class="brand">
+        <h1 class="brand__name" id="business-name">The Business Zm</h1>
+        <p class="brand__tagline" id="business-tagline"></p>
+      </div>
+
+      <div class="cta">
+        <a class="btn btn--primary" id="call-btn" href="#">Call</a>
+        <a class="btn btn--ghost" id="wa-btn" href="#" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </header>
+
+    <main class="container grid">
+      <section class="card">
+        <h2 class="card__title">Working hours</h2>
+        <div class="kv">
+          <div class="kv__row">
+            <div class="kv__k">Weekdays</div>
+            <div class="kv__v" id="hours-weekdays"></div>
+          </div>
+          <div class="kv__row">
+            <div class="kv__k">Weekends</div>
+            <div class="kv__v" id="hours-weekends"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2 class="card__title">Address</h2>
+        <p class="address" id="business-address"></p>
+        <a class="link" id="map-link" href="#" target="_blank" rel="noopener noreferrer">Open in Maps</a>
+      </section>
+
+      <section class="card card--full">
+        <h2 class="card__title">Services</h2>
+        <p class="muted" id="services-subtitle">Barbering services and pricing.</p>
+        <div class="cards" id="services-list"></div>
+      </section>
+
+      <section class="card card--full">
+        <h2 class="card__title">Book an appointment</h2>
+        <p class="muted">Select a service, pick a date, and choose an available time slot.</p>
+
+        <div class="booking">
+          <div class="booking__row2">
+            <div>
+              <label class="label" for="booking-service">Service</label>
+              <select class="input" id="booking-service"></select>
+              <p class="hint" id="booking-service-hint"></p>
+            </div>
+
+            <div>
+              <label class="label" for="booking-date">Date</label>
+              <input class="input" id="booking-date" type="date" />
+              <p class="hint" id="booking-hours-hint"></p>
+            </div>
+          </div>
+
+          <div>
+            <label class="label">Available time slots</label>
+            <div class="slots" id="booking-slots"></div>
+            <p class="hint" id="booking-selected-hint"></p>
+            <input id="booking-slot" type="hidden" />
+          </div>
+
+          <div class="booking__row2">
+            <div>
+              <label class="label" for="booking-name">Your name</label>
+              <input class="input" id="booking-name" type="text" placeholder="e.g., Garven Kalulu Jr" />
+            </div>
+            <div>
+              <label class="label" for="booking-phone">Phone</label>
+              <input class="input" id="booking-phone" type="tel" placeholder="e.g., +79958906501" />
+            </div>
+          </div>
+
+          <div class="booking__actions">
+            <button class="btn btn--primary" id="booking-submit" type="button">Confirm booking</button>
+            <span class="spacer"></span>
+            <p class="status" id="booking-status" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEWS -->
+      <section class="card card--full">
+        <h2 class="card__title">Reviews</h2>
+
+        <div id="reviews-list" class="reviews"></div>
+
+        <div class="divider"></div>
+
+        <h3 class="subhead">Leave a review</h3>
+
+        <div class="form">
+          <label class="label" for="review-name">Your name</label>
+          <input class="input" id="review-name" type="text" placeholder="e.g., Garven Kalulu Jr" />
+
+          <label class="label" for="review-rating">Rating</label>
+          <select class="input" id="review-rating">
+            <option value="5">5 — Excellent</option>
+            <option value="4">4 — Good</option>
+            <option value="3">3 — Okay</option>
+            <option value="2">2 — Not great</option>
+            <option value="1">1 — Bad</option>
+          </select>
+
+          <label class="label" for="review-comment">Comment</label>
+          <textarea class="input" id="review-comment" rows="4" placeholder="Share your experience..."></textarea>
+
+          <div class="panelbar">
+            <button class="btn btn--primary" id="review-submit" type="button">Submit review</button>
+            <p class="status" id="review-status" hidden></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card card--full">
+        <h2 class="card__title">Gallery</h2>
+        <p class="muted">Real results from my craft.</p>
+        <div class="gallery" id="gallery-grid"></div>
+      </section>
+
+      <section class="card card--full">
+        <h2 class="card__title">Map</h2>
+        <div class="map">
+          <iframe
+            id="map-embed"
+            title="Map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <div class="footer__row">
+        <small id="footer-text"></small>
+        <button class="linklike" id="admin-open" type="button">Admin</button>
+      </div>
+    </footer>
+
+    <dialog id="admin-dialog" class="dialog">
+      <div class="dialog__header">
+        <h3 class="dialog__title">Admin Panel</h3>
+        <button class="iconbtn" id="admin-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="dialog__body">
+        <!-- Admin Login (Supabase Auth) -->
+        <div id="admin-login-view">
+          <p class="muted">Sign in to manage bookings and services.</p>
+          <div class="form">
+            <label class="label" for="admin-email">Email</label>
+            <input class="input" id="admin-email" type="email" autocomplete="username" />
+
+            <label class="label" for="admin-password">Password</label>
+            <input class="input" id="admin-password" type="password" autocomplete="current-password" />
+
+            <div class="panelbar">
+              <button class="btn btn--primary" id="admin-login-btn" type="button">Sign in</button>
+              <p class="error" id="admin-login-error" hidden></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel-view" hidden>
+          <div class="panelbar">
+            <button class="btn btn--ghost" id="admin-logout-btn" type="button">Sign out</button>
+            <span class="spacer"></span>
+            <div class="tabs">
+              <button class="tab tab--active" id="tab-bookings" type="button">Bookings</button>
+              <button class="tab" id="tab-services" type="button">Services</button>
+              <button class="tab" id="tab-reviews" type="button">Reviews</button>
+            </div>
+          </div>
+
+          <!-- REVIEWS -->
+          <section id="admin-reviews-view" class="adminsection" hidden>
+            <div class="panelbar">
+              <div class="tabs">
+                <button class="tab tab--active" id="review-filter-pending" type="button">Pending</button>
+                <button class="tab" id="review-filter-approved" type="button">Approved</button>
+                <button class="tab" id="review-filter-hidden" type="button">Hidden</button>
+              </div>
+              <span class="spacer"></span>
+              <button class="btn btn--ghost" id="reviews-refresh" type="button">Refresh</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <p class="error" id="reviews-error" hidden></p>
+            <div class="adminlist" id="admin-reviews-list"></div>
+          </section>
+
+          <!-- BOOKINGS -->
+          <section id="admin-bookings-view" class="adminsection">
+            <div class="panelbar">
+              <div class="tabs">
+                <button class="tab tab--active" id="filter-today" type="button">Today</button>
+                <button class="tab" id="filter-upcoming" type="button">Upcoming</button>
+              </div>
+              <span class="spacer"></span>
+              <button class="btn btn--ghost" id="bookings-refresh" type="button">Refresh</button>
+            </div>
+
+            <div class="divider"></div>
+            <p class="error" id="bookings-error" hidden></p>
+            <div class="adminlist" id="bookings-list"></div>
+          </section>
+
+          <!-- SERVICES -->
+          <section id="admin-services-view" class="adminsection" hidden>
+            <div class="panelbar">
+              <button class="btn btn--ghost" id="admin-reset-btn" type="button">Reset services to defaults</button>
+              <p class="error" id="service-form-error" hidden></p>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="form">
+              <input id="service-edit-id" type="hidden" />
+
+              <label class="label" for="service-name">Service name</label>
+              <input class="input" id="service-name" type="text" />
+
+              <label class="label" for="service-price">Price (RUB)</label>
+              <input class="input" id="service-price" type="number" min="0" step="1" />
+
+              <div class="row2">
+                <div>
+                  <label class="label" for="service-min">Duration min (minutes)</label>
+                  <input class="input" id="service-min" type="number" min="1" step="1" />
+                </div>
+                <div>
+                  <label class="label" for="service-max">Duration max (minutes)</label>
+                  <input class="input" id="service-max" type="number" min="1" step="1" />
+                </div>
+              </div>
+
+              <div class="panelbar">
+                <button class="btn btn--primary" id="service-save-btn" type="button">Save</button>
+                <button class="btn btn--ghost" id="service-cancel-btn" type="button">Cancel</button>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h4 class="subhead">Existing services</h4>
+            <div class="adminlist" id="admin-services-list"></div>
+          </section>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="booking-confirm-dialog" class="dialog confirm-dialog">
+      <div class="dialog__header">
+        <h3 class="dialog__title">Booking received</h3>
+        <button class="iconbtn" id="confirm-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="dialog__body">
+        <div class="confirm">
+          <div class="confirm__time" id="confirm-datetime"></div>
+
+          <div class="confirm__grid">
+            <div class="confirm__row">
+              <div class="confirm__k">Service</div>
+              <div class="confirm__v" id="confirm-service"></div>
+            </div>
+
+            <div class="confirm__row">
+              <div class="confirm__k">Reference</div>
+              <div class="confirm__v confirm__ref" id="confirm-ref"></div>
+            </div>
+
+            <div class="confirm__row">
+              <div class="confirm__k">Status</div>
+              <div class="confirm__v">Pending (awaiting confirmation)</div>
+            </div>
+          </div>
+
+          <p class="muted small confirm__note">
+            We will confirm or cancel by WhatsApp/phone.
+          </p>
+
+          <div class="panelbar">
+            <button class="btn btn--primary" id="confirm-done" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog id="gallery-dialog" class="dialog gallery-dialog">
+      <div class="dialog__header">
+        <h3 class="dialog__title" id="gallery-title">Preview</h3>
+        <button class="iconbtn" id="gallery-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="dialog__body">
+        <figure class="lightbox">
+          <img id="gallery-full" alt="" />
+          <figcaption class="muted small" id="gallery-caption"></figcaption>
+        </figure>
+      </div>
+    </dialog>
+
+    <dialog id="review-thanks-dialog" class="dialog confirm-dialog">
+      <div class="dialog__header">
+        <h3 class="dialog__title">Thank you</h3>
+        <button class="iconbtn" id="review-thanks-close" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="dialog__body">
+        <p class="muted" style="margin-top:0;">
+          Thank you for your review! We look forward to working with you again.
+        </p>
+
+        <div class="panelbar">
+          <button class="btn btn--primary" id="review-thanks-done" type="button">Done</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
